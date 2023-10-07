@@ -1,4 +1,5 @@
-import { dimensions } from "./chartSize.js";
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import dimensions from "./chartSize.js";
 
 //Get CO2 data from API endpoint
 async function getCO2Data() {

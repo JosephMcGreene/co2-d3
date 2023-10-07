@@ -3,25 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CO2 Annual Cycle</title>
+    <title>Environment Data</title>
   </head>
   <body>
     <div id="container"></div>
-    <svg></svg>
+    <svg id="co2Chart"></svg>
+    <svg id="tempChart"></svg>
 
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script type="module">
+      import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+      import dimensions from "./chartSize.js";
       import { co2Data, day, co2X, co2Y } from "./co2Chart.js";
-      import { dimensions } from "./chartSize.js";
 
-      // Select the SVG container.
-      const svg = d3
-        .select("svg")
+      // Select the CO2 SVG container.
+      const co2SVG = d3
+        .select("#co2Chart")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height);
 
-      // Mount the x-axis.
-      svg
+      // Mount the CO2 x-axis.
+      co2SVG
         .append("g")
         .attr(
           "transform",
@@ -29,14 +30,14 @@
         )
         .call(d3.axisBottom(co2X));
 
-      // Mount the y-axis.
-      svg
+      // Mount the CO2 y-axis.
+      co2SVG
         .append("g")
         .attr("transform", `translate(${dimensions.marginLeft},0)`)
         .call(d3.axisLeft(co2Y));
 
-      // Mount the line.
-      svg
+      // Mount the CO2 data line.
+      co2SVG
         .append("path")
         .datum(co2Data)
         .attr("fill", "none")
@@ -50,10 +51,8 @@
             .y((d) => co2Y(d.cycle))
         );
 
-      d3.select(svg);
-
-      // Append the SVG element.
-      container.append(svg.node());
+      // Append the CO2 SVG element.
+      container.append(co2SVG.node());
     </script>
   </body>
 </html>
