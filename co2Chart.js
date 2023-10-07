@@ -1,12 +1,9 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import dimensions from "./chartSize.js";
+import { getDataAbout } from "./helpers.js";
 
 //Get CO2 data from API endpoint
-async function getCO2Data() {
-  const { co2 } = await d3.json("https://global-warming.org/api/co2-api");
-  return co2;
-}
-export const co2Data = await getCO2Data();
+export const { co2: co2Data } = await getDataAbout("co2");
 
 export const day = (year, month, day) => {
   return new Date(`${year} ${month} ${day}`);

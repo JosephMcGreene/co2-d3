@@ -14,7 +14,10 @@
       import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
       import dimensions from "./chartSize.js";
       import { co2Data, day, co2X, co2Y } from "./co2Chart.js";
+      import { tempData, findDecimalOfYear } from "./tempChart.js";
 
+      findDecimalOfYear("1880.04");
+      // console.log(tempData);
       // Select the CO2 SVG container.
       const co2SVG = d3
         .select("#co2Chart")
