@@ -12,18 +12,39 @@
 
     <script type="module">
       import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-      import dimensions from "./chartSize.js";
-      import { co2Data, day, co2X, co2Y } from "./co2Chart.js";
-      import { tempData, findDecimalOfYear } from "./tempChart.js";
+      import { dimensions } from "./env.js";
+      import { datePoint } from "./helpers.js";
+      import { co2Data, co2X, co2Y } from "./co2Chart.js";
+      import {
+        tempData,
+        getMonthFromDecimal,
+        tempX,
+        tempY,
+      } from "./tempChart.js";
 
-      findDecimalOfYear("1880.04");
-      // console.log(tempData);
+      console.log(
+        datePoint(
+          tempData[0].time.substring(0, 4),
+          getMonthFromDecimal(tempData[0]),
+          0o1
+        )
+      );
+      // console.log(datePoint(2020, 1, 1));
+      // console.log(tempData[0].time.substring(0, 4));
+      // console.log(getMonthFromDecimal(tempData[0]));
+      // SVG Containers:
       // Select the CO2 SVG container.
       const co2SVG = d3
         .select("#co2Chart")
         .attr("width", dimensions.width)
         .attr("height", dimensions.height);
+      // Select the temperature SVG container
+      const tempSVG = d3
+        .select("#tempChart")
+        .attr("width", dimensions.width)
+        .attr("height", dimensions.height);
 
+      // X-Axes:
       // Mount the CO2 x-axis.
       co2SVG
         .append("g")
@@ -32,13 +53,28 @@
           `translate(0, ${dimensions.height - dimensions.marginBottom})`
         )
         .call(d3.axisBottom(co2X));
+      // Mount the temperature x-axis
+      tempSVG
+        .append("g")
+        .attr(
+          "transform",
+          `translate(0, ${dimensions.height - dimensions.marginBottom})`
+        )
+        .call(d3.axisBottom(tempX));
 
+      // Y-Axes:
       // Mount the CO2 y-axis.
       co2SVG
         .append("g")
-        .attr("transform", `translate(${dimensions.marginLeft},0)`)
+        .attr("transform", `translate(${dimensions.marginLeft}, 0)`)
         .call(d3.axisLeft(co2Y));
+      // Mount the temperature y-axis
+      tempSVG
+        .append("g")
+        .attr("transform", `translate(${dimensions.marginLeft}, 0)`)
+        .call(d3.axisLeft(tempY));
 
+      // Data lines:
       // Mount the CO2 data line.
       co2SVG
         .append("path")
@@ -50,12 +86,33 @@
           "d",
           d3
             .line()
-            .x((d) => co2X(day(d.year, d.month, d.day)))
+            .x((d) => co2X(datePoint(d.year, d.month, d.day)))
             .y((d) => co2Y(d.cycle))
         );
+      // Mount the temperature data line
+      tempSVG
+        .append("path")
+        .datum(tempData)
+        .attr("fill", "none")
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x((d) =>
+              tempX(
+                datePoint(d.time.substring(0, 4), getMonthFromDecimal(d), 1)
+              )
+            )
+            .y((d) => tempY(d.station))
+        );
 
+      // Add Containers to DOM:
       // Append the CO2 SVG element.
       container.append(co2SVG.node());
+      // Append the temperature SVG element.
+      container.append(tempSVG.node());
     </script>
   </body>
 </html>

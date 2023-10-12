@@ -1,4 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
 const dataSource = "https://global-warming.org/api/";
 
 export async function getDataAbout(endpoint) {
@@ -8,3 +9,7 @@ export async function getDataAbout(endpoint) {
     console.error(err);
   }
 }
+
+export const datePoint = (year, month, day = 0o1) => {
+  return new Date(`${year} ${month} ${day}`);
+};
